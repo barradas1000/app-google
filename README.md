@@ -36,6 +36,7 @@ O objetivo é criar uma aplicação web robusta (Progressive Web App - PWA) que 
     -   **Bibliotecas:** [Leaflet.js](https://leafletjs.com/) para o mapa interativo.
     -   **APIs:** `Geolocation API` nativa do navegador para obter as coordenadas GPS.
     -   **Funcionalidade Offline:** Desenhada como um PWA com um Service Worker básico.
+-   **Funcionamento em Background:** Capacidade de executar em segundo plano em dispositivos móveis através de Service Workers e Geolocation API.
 
 -   **Backend (BaaS - Backend as a Service):**
     -   **Platforma:** [Supabase](https://supabase.io/)
@@ -87,6 +88,8 @@ Este projeto usa o Vite como ferramenta de build.
     -   `VITE_SUPABASE_ANON_KEY`: A chave pública (anon) do seu projeto Supabase.
 4.  **Faça o deploy!** A Vercel executará o comando `npm run build` e publicará o resultado.
 
+**Nota sobre URLs no Vercel:** O Vercel pode atribuir subdomínios automáticos como `https://app-google-username-gmailcoms-projects.vercel.app/`. Para um domínio personalizado, configure nas definições do projeto Vercel.
+
 ---
 
 ## Plano de Construção (Concluído)
@@ -121,3 +124,47 @@ O desenvolvimento passou pelas seguintes etapas, todas concluídas com sucesso.
 -   [X] **(Feito)** Melhorar a UI/UX, adicionando feedback visual para o estado do rastreamento.
 -   [X] **(Feito)** Implementar tratamento de erros robusto (falha de rede, erros da API Supabase, etc.).
 -   [X] **(Feito)** Testar a aplicação em diferentes dispositivos e condições de rede.
+
+---
+
+## Funcionamento em Background em Dispositivos Móveis
+
+Esta aplicação possui capacidades de execução em segundo plano graças às seguintes tecnologias:
+
+### Tecnologias que Habilitam Background Execution
+
+1. **Service Worker (sw.js)**
+   - Atua como proxy entre a aplicação e a rede
+   - Permite cache de recursos para funcionamento offline
+   - Executa em background mesmo quando a aplicação não está ativa
+   - Intercepta requisições de rede
+
+2. **Geolocation API com watchPosition()**
+   - Monitorização contínua da localização GPS
+   - Funcionamento em background (dependendo das permissões)
+   - Atualizações automáticas de posição
+
+3. **Progressive Web App (PWA)**
+   - Configurada como aplicação standalone (`"display": "standalone"`)
+   - Pode ser instalada no dispositivo móvel
+   - Execução independente do browser
+
+4. **Supabase Realtime Integration**
+   - Sincronização contínua com a base de dados
+   - Comunicação bidirecional em tempo real
+   - Atualizações automáticas mesmo em background
+
+### Capacidades em Background
+- ✅ Rastreamento contínuo de GPS
+- ✅ Sincronização automática com base de dados
+- ✅ Cache de recursos para funcionamento offline
+- ✅ Execução independente do browser (como PWA instalada)
+
+### Limitações
+- ⚠️ iOS tem restrições mais severas para execução em background
+- ⚠️ Necessita de permissões explícitas do usuário
+- ⚠️ Navegadores podem suspender execução após tempo inativo
+- ⚠️ Funcionalidade varia entre diferentes navegadores móveis
+
+### Para Melhor Performance em Background
+Para funcionalidade completa em background, considere desenvolver uma aplicação nativa usando React Native ou Flutter, que teria acesso completo às APIs de background do sistema operativo.
