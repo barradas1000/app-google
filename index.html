@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tuktuk Milfontes Tracker</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#00796b">
+  <!-- Google Material Symbols -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<script type="importmap">
+{
+  "imports": {
+    "@supabase/supabase-js": "https://aistudiocdn.com/@supabase/supabase-js@^2.56.0",
+    "leaflet": "https://aistudiocdn.com/leaflet@^1.9.4",
+    "leaflet/": "https://aistudiocdn.com/leaflet@^1.9.4/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+  <main id="app-container">
+    <header>
+      <h1>Tuktuk Milfontes Tracker</h1>
+    </header>
+    <section id="auth-section">
+      <button id="login-btn">Iniciar Sessão</button>
+      <button id="logout-btn" style="display: none;">Terminar Sessão</button>
+    </section>
+    <section id="status-section">
+      <p><strong>Status:</strong> <span id="status-text">Desconectado</span></p>
+    </section>
+    <section id="location-section">
+        <h2>Localização em Tempo Real</h2>
+        <div class="status-line">
+            <span id="gps-indicator-icon" class="material-symbols-outlined">location_off</span>
+            <strong>Status do GPS:</strong>
+            <span id="location-status">Inativo</span>
+        </div>
+        <div class="coordinates-grid">
+            <div>
+                <label>Latitude</label>
+                <span id="latitude-text">-</span>
+            </div>
+            <div>
+                <label>Longitude</label>
+                <span id="longitude-text">-</span>
+            </div>
+            <div>
+                <label>Precisão</label>
+                <span id="accuracy-text">-</span>
+            </div>
+        </div>
+    </section>
+    <section id="map-section">
+      <div id="map"></div>
+    </section>
+  </main>
+  <script type="module" src="/src/index.tsx"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').then(registration => {
+          console.log('SW registado:', registration);
+        }).catch(registrationError => {
+          console.log('Falha no registo do SW:', registrationError);
+        });
+      });
+    }
+  </script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>

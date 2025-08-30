@@ -1,0 +1,160 @@
+/* General Body Styles */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align to top for better mobile view */
+  min-height: 100vh;
+  margin: 0;
+  padding-top: 2rem;
+  background-color: #f0f2f5;
+  color: #333;
+}
+
+/* App Container */
+#app-container {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+}
+
+header h1 {
+  color: #00796b;
+  margin-top: 0;
+  font-size: 1.5rem;
+}
+
+#auth-section, #status-section, #location-section {
+  margin-top: 1.5rem;
+}
+
+/* Buttons */
+button {
+  background-color: #00796b;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+button:hover {
+  background-color: #004d40;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+button:disabled {
+    background-color: #9e9e9e;
+    cursor: wait;
+}
+
+#logout-btn {
+  background-color: #d32f2f;
+}
+
+#logout-btn:hover {
+  background-color: #b71c1c;
+}
+
+/* Location Section */
+#location-section {
+  border-top: 1px solid #eee;
+  padding-top: 1.5rem;
+}
+
+#location-section h2 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  color: #555;
+}
+
+.status-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 1rem;
+}
+
+#gps-indicator-icon {
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+/* GPS Status Indicator Colors */
+#location-section.status-inactive #gps-indicator-icon,
+#location-section.status-inactive #location-status {
+    color: #757575; /* Grey */
+}
+#location-section.status-requesting #gps-indicator-icon,
+#location-section.status-requesting #location-status {
+    color: #f57c00; /* Orange */
+}
+#location-section.status-sync-error #gps-indicator-icon,
+#location-section.status-sync-error #location-status {
+    color: #f57c00; /* Orange */
+}
+#location-section.status-active #gps-indicator-icon,
+#location-section.status-active #location-status {
+    color: #388e3c; /* Green */
+    animation: pulse 1.5s infinite;
+}
+#location-section.status-error #gps-indicator-icon,
+#location-section.status-error #location-status {
+    color: #d32f2f; /* Red */
+}
+
+/* Coordinates Grid */
+.coordinates-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    text-align: left;
+}
+
+.coordinates-grid div {
+    background-color: #f7f7f7;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.coordinates-grid label {
+    display: block;
+    font-size: 0.8rem;
+    color: #555;
+    margin-bottom: 0.25rem;
+}
+
+.coordinates-grid span {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #004d40;
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
