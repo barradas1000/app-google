@@ -203,10 +203,32 @@ async function handleLocationSuccess(position: GeolocationPosition) {
   if (!currentUser) return;
 
   try {
+    // Primeiro busca o perfil do usuário
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('id', currentUser.id)
+      .single();
+    
+    if (profileError || !profile) {
+        throw new Error('Nenhum perfil encontrado para este utilizador');
+    }
+
+    // Depois busca o condutor usando o ID do perfil
+    const { data: conductor, error: conductorError } = await supabase
+      .from('conductors')
+      .select('id')
+      .eq('user_id', profile.id)
+      .single();
+    
+    if (conductorError || !conductor) {
+        throw new Error('Nenhum condutor encontrado para este utilizador');
+    }
+
     const { error } = await supabase
       .from('active_conductors')
       .upsert({
-        conductor_id: currentUser.id,
+        conductor_id: conductor.id,
         current_latitude: latitude,
         current_longitude: longitude,
         accuracy: accuracy,
@@ -321,17 +343,35 @@ async function handleLogout() {
 
     if (currentUser) {
         try {
-            const { error } = await supabase
-              .from('active_conductors')
-              .upsert({
-                  conductor_id: currentUser.id,
-                  is_active: false,
-                  is_available: false,
-                  status: 'offline',
-                  session_end: new Date().toISOString(),
-                  updated_at: new Date().toISOString()
-              }, { onConflict: 'conductor_id' });
-            if (error) throw error;
+            // Primeiro busca o perfil do usuário
+            const { data: profile, error: profileError } = await supabase
+              .from('profiles')
+              .select('id')
+              .eq('id', currentUser.id)
+              .single();
+            
+            if (!profileError && profile) {
+                // Depois busca o condutor usando o ID do perfil
+                const { data: conductor, error: conductorError } = await supabase
+                  .from('conductors')
+                  .select('id')
+                  .eq('user_id', profile.id)
+                  .single();
+                
+                if (!conductorError && conductor) {
+                    const { error: upsertError } = await supabase
+                      .from('active_conductors')
+                      .upsert({
+                          conductor_id: conductor.id,
+                          is_active: false,
+                          is_available: false,
+                          status: 'offline',
+                          session_end: new Date().toISOString(),
+                          updated_at: new Date().toISOString()
+                      }, { onConflict: 'conductor_id' });
+                    if (upsertError) throw upsertError;
+                }
+            }
         } catch (dbError) {
             console.error('Erro ao finalizar sessão na base de dados:', (dbError as Error).message);
         }
@@ -391,10 +431,32 @@ async function updateUserState(user: User | null) {
         statusText.textContent = `Conectado como ${displayName}`;
 
         try {
+            // Primeiro busca o perfil do usuário
+            const { data: profile, error: profileError } = await supabase
+              .from('profiles')
+              .select('id')
+              .eq('id', user.id)
+              .single();
+            
+            if (profileError || !profile) {
+                throw new Error('Nenhum perfil encontrado para este utilizador');
+            }
+
+            // Depois busca o condutor usando o ID do perfil
+            const { data: conductor, error: conductorError } = await supabase
+              .from('conductors')
+              .select('id')
+              .eq('user_id', profile.id)
+              .single();
+            
+            if (conductorError || !conductor) {
+                throw new Error('Nenhum condutor encontrado para este utilizador');
+            }
+
             const { error } = await supabase
               .from('active_conductors')
               .upsert({
-                  conductor_id: user.id,
+                  conductor_id: conductor.id,
                   is_active: true,
                   is_available: true,
                   status: 'available',
@@ -410,7 +472,7 @@ async function updateUserState(user: User | null) {
             if (error) throw error;
         } catch (dbError) {
             console.error('Erro ao iniciar sessão na base de dados:', (dbError as Error).message);
-            alert('Não foi possível iniciar a sessão de rastreamento. Por favor, tente novamente.');
+            alert('Não foi possível iniciar a sessão de rastreamento. Verifique se existe um condutor registado para o seu utilizador.');
             handleLogout();
             return;
         }
