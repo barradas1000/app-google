@@ -212,7 +212,9 @@ async function handleLocationSuccess(position: GeolocationPosition) {
         accuracy: accuracy,
         last_ping: new Date().toISOString(),
         is_active: true,
+        is_available: true,
         status: 'available',
+        updated_at: new Date().toISOString()
       }, { onConflict: 'conductor_id' });
     
     if (error) throw error;
@@ -324,8 +326,10 @@ async function handleLogout() {
               .upsert({
                   conductor_id: currentUser.id,
                   is_active: false,
+                  is_available: false,
                   status: 'offline',
                   session_end: new Date().toISOString(),
+                  updated_at: new Date().toISOString()
               }, { onConflict: 'conductor_id' });
             if (error) throw error;
         } catch (dbError) {
@@ -392,11 +396,16 @@ async function updateUserState(user: User | null) {
               .upsert({
                   conductor_id: user.id,
                   is_active: true,
+                  is_available: true,
                   status: 'available',
                   session_start: new Date().toISOString(),
                   last_ping: new Date().toISOString(),
                   name: displayName,
                   session_end: null,
+                  current_latitude: 0, // Valor temporário, será atualizado pelo GPS
+                  current_longitude: 0, // Valor temporário, será atualizado pelo GPS
+                  accuracy: 0, // Valor temporário, será atualizado pelo GPS
+                  updated_at: new Date().toISOString()
               }, { onConflict: 'conductor_id' });
             if (error) throw error;
         } catch (dbError) {
